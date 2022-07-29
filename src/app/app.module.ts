@@ -89,7 +89,7 @@ let router: Routes = [
     { provide: NZ_I18N, useValue: en_US },
     {
       provide: APP_BASE_HREF,
-      useValue: '/bc18__FinalProject__TranNgocBaoBinh/',
+      useValue: '/air-bnb-angular-project/',
     },
   ],
   bootstrap: [AppComponent],
