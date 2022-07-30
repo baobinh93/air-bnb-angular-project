@@ -14,6 +14,7 @@
 .roompage__room:hover .roompage__room--img {
   transform: scale(1.02);
 }
+
 .roompage__room--description,
 .roompage__room--space,
 .roompage__room--utilities,

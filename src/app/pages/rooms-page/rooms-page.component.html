@@ -1,3 +1,242 @@
-<p>
-  rooms-page works!
-</p>
+<div
+  class="w-100 d-flex justify-content-center"
+  style="margin-top: 60px; margin-bottom: 60px"
+  *ngIf="isLoading"
+>
+  <mat-spinner class="my-6" mode="indeterminate"></mat-spinner>
+</div>
+
+<div class="map w-100" *ngIf="this.dataAllRooms.length !== 0">
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d501726.4614470814!2d106.4143493!3d10.7546658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529292e8d3dd1%3A0xf15f5aad773c112b!2zSOG7kyBDaMOtIE1pbmgsIFRow6BuaCBwaOG7kSBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1655880825157!5m2!1svi!2s"
+    style="border: 0"
+    allowfullscreen="true"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    class="w-100"
+    height="450px"
+  ></iframe>
+</div>
+<div
+  class="mt-3 text-center"
+  *ngIf="this.dataAllRooms.length === 0 && !isLoading"
+>
+  <div class="roompage__error--no-room">
+    <div class="animate__animated animate__shakeY animate__infinite">
+      <svg
+        enable-background="new 0 0 226 249.135"
+        height="249.135"
+        id="Layer_1"
+        overflow="visible"
+        viewBox="0 0 226 249.135"
+        width="226"
+        xml:space="preserve"
+        class="sc-2s6gnf-1 bXGikU"
+      >
+        <circle cx="113" cy="113" fill="#FFE585" r="109"></circle>
+        <line
+          enable-background="new"
+          fill="none"
+          opacity="0.29"
+          stroke="#6E6E96"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="8"
+          x1="88.866"
+          x2="136.866"
+          y1="245.135"
+          y2="245.135"
+        ></line>
+        <line
+          enable-background="new"
+          fill="none"
+          opacity="0.17"
+          stroke="#6E6E96"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="8"
+          x1="154.732"
+          x2="168.732"
+          y1="245.135"
+          y2="245.135"
+        ></line>
+        <line
+          enable-background="new"
+          fill="none"
+          opacity="0.17"
+          stroke="#6E6E96"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="8"
+          x1="69.732"
+          x2="58.732"
+          y1="245.135"
+          y2="245.135"
+        ></line>
+        <circle cx="68.732" cy="93" fill="#6E6E96" r="9"></circle>
+        <path
+          d="M115.568,5.947c-1.026,0-2.049,0.017-3.069,0.045  c54.425,1.551,98.069,46.155,98.069,100.955c0,55.781-45.219,101-101,101c-55.781,0-101-45.219-101-101  c0-8.786,1.124-17.309,3.232-25.436c-3.393,10.536-5.232,21.771-5.232,33.436c0,60.199,48.801,109,109,109s109-48.801,109-109  S175.768,5.947,115.568,5.947z"
+          enable-background="new"
+          fill="#FF9900"
+          opacity="0.24"
+        ></path>
+        <circle cx="156.398" cy="93" fill="#6E6E96" r="9"></circle>
+        <ellipse
+          cx="67.732"
+          cy="140.894"
+          enable-background="new"
+          fill="#FF0000"
+          opacity="0.18"
+          rx="17.372"
+          ry="8.106"
+        ></ellipse>
+        <ellipse
+          cx="154.88"
+          cy="140.894"
+          enable-background="new"
+          fill="#FF0000"
+          opacity="0.18"
+          rx="17.371"
+          ry="8.106"
+        ></ellipse>
+        <path
+          d="M13,118.5C13,61.338,59.338,15,116.5,15c55.922,0,101.477,44.353,103.427,99.797  c0.044-1.261,0.073-2.525,0.073-3.797C220,50.802,171.199,2,111,2S2,50.802,2,111c0,50.111,33.818,92.318,79.876,105.06  C41.743,201.814,13,163.518,13,118.5z"
+          fill="#FFEFB5"
+        ></path>
+        <circle
+          cx="113"
+          cy="113"
+          fill="none"
+          r="109"
+          stroke="#6E6E96"
+          stroke-width="8"
+        ></circle>
+      </svg>
+    </div>
+    <div class="mt-5">
+      <div class="text-secondary h6 font-weight-light">
+        Sorry, We couldn't find what you are looking for!
+      </div>
+      <div class="text-dart h5">PLease move the map to find more</div>
+    </div>
+  </div>
+</div>
+<div class="" *ngIf="this.dataAllRooms.length !== 0">
+  <div class="roompage__descripton border-bottom py-3">
+    <span class="p-4"
+      >Hon {{ this.dataAllRooms.length }} cho o tai khu vuc tren ban do</span
+    >
+  </div>
+  <nz-table #nzTable [nzData]="dataAllRooms" [nzPageSize]="6" class="w-100">
+    <tbody>
+      <tr *ngFor="let item of nzTable.data; let i = index">
+        <td>
+          <div class="roompage__room py-3">
+            <a href="/detail/{{ item['_id'] }}">
+              <div class="row">
+                <div class="col-12 col-md-4">
+                  <img
+                    class="img-fluid rounded roompage__room--img"
+                    src="{{ item['image'] }}"
+                    alt="{{ item['name'] }}"
+                  />
+                </div>
+                <div
+                  class="col-12 col-md-8 d-flex align-items-start flex-column"
+                >
+                  <div
+                    class="roompage__room--name h4 mt-3 mt-md-0 text-capitalize"
+                  >
+                    {{ item["name"] }}
+                  </div>
+                  <div class="roompage__room--description mb-2 text-wrap">
+                    <!-- {{ item['description'] >}} -->
+
+                    {{
+                      item["description"].length > 200
+                        ? (item["description"] | slice: 0:200) + "..."
+                        : item["description"]
+                    }}
+                  </div>
+                  <div class="roompage__room--space mb-1">
+                    <span>{{ item["guests"] }}</span> Guest.
+                    <span>{{ item["bedRoom"] }}</span> Bedroom.
+                    <span>{{ item["bath"] }}</span> Bath.
+                  </div>
+                  <div
+                    class="roompage__room--utilities mb-auto text-truncate text-wrap mb-1"
+                  >
+                    <span
+                      *ngIf="item['kitchen']"
+                      class="text-capitalize border-right mr-1 pr-1"
+                    >
+                      kitchen
+                    </span>
+                    <span
+                      *ngIf="item['elevator']"
+                      class="text-capitalize border-right mr-1 pr-1"
+                    >
+                      elevator
+                    </span>
+                    <span
+                      *ngIf="item['hotTub']"
+                      class="text-capitalize border-right mr-1 pr-1"
+                    >
+                      hotTub
+                    </span>
+                    <span
+                      *ngIf="item['pool']"
+                      class="text-capitalize border-right mr-1 pr-1"
+                      >pool
+                    </span>
+                    <span
+                      *ngIf="item['indoorFireplace']"
+                      class="text-capitalize border-right mr-1 pr-1"
+                      >indoorFireplace
+                    </span>
+                    <span
+                      *ngIf="item['dryer']"
+                      class="text-capitalize border-right mr-1 pr-1"
+                      >dryer
+                    </span>
+                    <span
+                      *ngIf="item['gym']"
+                      class="text-capitalize border-right mr-1 pr-1"
+                      >gym
+                    </span>
+                    <span
+                      *ngIf="item['heating']"
+                      class="text-capitalize border-right mr-1 pr-1"
+                      >heating
+                    </span>
+                    <span
+                      *ngIf="item['wifi']"
+                      class="text-capitalize border-right mr-1 pr-1"
+                      >wifi
+                    </span>
+                    <span
+                      *ngIf="item['cableTV']"
+                      class="text-capitalize border-right mr-1 pr-1"
+                      >cableTV
+                    </span>
+                  </div>
+                  <div
+                    class="w-100 roompage__room--rating d-flex justify-content-between"
+                  >
+                    <div class="roompage--room__rate">
+                      <i class="fa-solid fa-star mr-1"></i>
+                      <span>4</span>
+                    </div>
+                    <div class="roompage--room__price">
+                      $ <span> {{ item["price"] }} </span> / night
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

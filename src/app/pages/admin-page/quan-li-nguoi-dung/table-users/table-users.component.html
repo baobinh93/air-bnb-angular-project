@@ -1,3 +1,137 @@
-<p>
-  table-users works!
-</p>
+<nz-table
+  #nzTable
+  [nzData]="listOfDisplayData"
+  nzTableLayout="auto"
+  [nzPageSize]="6"
+>
+  <thead>
+    <tr>
+      <th nzCustomFilter>
+        Name
+        <nz-filter-trigger
+          [(nzVisible)]="visible"
+          [nzActive]="searchValue.length > 0"
+          [nzDropdownMenu]="menu"
+        >
+          <i nz-icon nzType="search"></i>
+        </nz-filter-trigger>
+      </th>
+      <th class="d-none d-md-block">Avatar</th>
+      <th>Email</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of nzTable.data; let i = index">
+      <td>{{ data["name"] }}</td>
+      <td class="d-none d-md-table-cell">
+        <nz-avatar
+          class="d-none d-md-block"
+          nz-comment-avatar
+          nzIcon="user"
+          nzSrc="{{ data['avatar'] }}"
+        ></nz-avatar>
+      </td>
+      <td class="text-wrap overflow-hidden">{{ data["email"] }}</td>
+      <td>
+        <button
+          class="btn btn-info btn-sm mr-1 mb-1"
+          (click)="showUserToModal(data)"
+        >
+          Xem
+        </button>
+
+        <button
+          class="btn btn-success btn-sm mr-1 mb-1"
+          (click)="updateUser(data)"
+        >
+          Sửa
+        </button>
+        <button
+          class="btn btn-danger btn-sm mb-1"
+          nz-popconfirm
+          nzPopconfirmTitle="Bạn có chắc muốn xoá?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="confirmDeleteUser(data['_id'])"
+        >
+          Xoá
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown">
+    <div class="search-box">
+      <input
+        type="text"
+        nz-input
+        placeholder="Search name"
+        [(ngModel)]="searchValue"
+      />
+      <button
+        nz-button
+        nzSize="small"
+        nzType="primary"
+        (click)="search()"
+        class="search-button"
+      >
+        Search
+      </button>
+      <button nz-button nzSize="small" (click)="reset()">Reset</button>
+    </div>
+  </div>
+</nz-dropdown-menu>
+<nz-modal
+  [(nzVisible)]="isInfoUserModalVisible"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="modalFooter"
+  (nzOnOk)="handleOk()"
+>
+  <ng-container *nzModalContent>
+    <div class="row">
+      <div class="col-sm-6 col-md-4">
+        <img
+          src="{{ this.dataUserToShowInModal['avatar'] }}"
+          alt=""
+          class="img-rounded img-responsive w-100"
+        />
+      </div>
+      <div class="col-sm-6 col-md-8">
+        <h4>{{ this.dataUserToShowInModal["name"] }}</h4>
+        <small
+          ><cite title="San Francisco, USA"
+            >{{ this.dataUserToShowInModal["address"] }}
+            <i class="fa-solid fa-location-dot ml-1"></i></cite
+        ></small>
+        <p>
+          <i class="fa-solid fa-envelope mr-1"></i>
+          {{ this.dataUserToShowInModal["email"] }}
+          <br />
+
+          <i class="fa-solid fa-gift mr-1"></i>
+          {{ this.dataUserToShowInModal["birthday"] | date }}
+          <br />
+
+          <i class="fa-solid fa-phone mr-1"></i>
+          {{ this.dataUserToShowInModal["phone"] }}
+        </p>
+        <!-- Split button -->
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Đóng</button>
+  </ng-template>
+</nz-modal>
+<nz-modal
+  [(nzVisible)]="isUpdateUserFormModalVisible"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
+  <ng-container *nzModalContent>
+    <app-update-user-form
+      [dataUserToUpdate]="this.dataUserToUpdate"
+    ></app-update-user-form>
+  </ng-container>
+</nz-modal>
