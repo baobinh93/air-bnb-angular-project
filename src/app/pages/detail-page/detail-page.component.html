@@ -351,6 +351,7 @@
           [dateEnd]="this.selectedDateRange?.end"
           [roomId]="this.idRoom"
           [roomPrice]="this.dataRoom.price"
+          (setDayStart)="getData($event)"
         ></app-booking-form>
       </div>
     </div>

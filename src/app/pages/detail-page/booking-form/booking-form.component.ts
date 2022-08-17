@@ -1,8 +1,10 @@
 import { formatDate } from '@angular/common';
 import {
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   SimpleChange,
   SimpleChanges,
 } from '@angular/core';
@@ -39,6 +41,16 @@ export class BookingFormComponent implements OnInit {
   selectedDateRange!: DateRange<Date>;
   tokenUser!: string;
   numberOfDate: number = 0;
+  counter: number = 0;
+  @Output() setDayStart = new EventEmitter();
+  sendDataToParent(_dateStart: any, _dateEnd: any) {
+    //  console.log('give data');
+
+    this.setDayStart.emit([_dateStart, _dateEnd]);
+  }
+  // sendDataToParent(date: Date) {
+  //   this.setDayStart.emit(date);
+  // }
   // _onSelectedChange(date: Date): void {
   //   if (
   //     this.selectedDateRange &&
@@ -100,10 +112,21 @@ export class BookingFormComponent implements OnInit {
     dateRangeStart: HTMLInputElement,
     dateRangeEnd: HTMLInputElement
   ) {
-    console.log(dateRangeStart.value);
-    console.log(dateRangeEnd.value);
+    //console.log(dateRangeStart.value);
+    //console.log(dateRangeEnd.value);
     let dateStart = new Date(dateRangeStart.value);
+
     let dateEnd = new Date(dateRangeEnd.value);
+    //  console.log(dateEnd.toString() === 'Invalid Date');
+    if (dateEnd.toString() !== 'Invalid Date') {
+      //console.log(dateEnd);
+
+      this.sendDataToParent(dateStart, dateEnd);
+    } else {
+      this.sendDataToParent(dateStart, null);
+    }
+
+    //this.sendDataToParent(dateStart, dateEnd);
     let dateNum =
       (dateEnd.getTime() - dateStart.getTime()) / (1000 * 3600 * 24);
     if (dateNum) {

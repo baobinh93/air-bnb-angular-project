@@ -36,6 +36,12 @@ export class DetailPageComponent implements OnInit {
       this.selectedDateRange = new DateRange(date, null);
     }
   }
+
+  getData(date: any) {
+    // console.log('Nhan Data', date);
+
+    this.selectedDateRange = new DateRange(date[0], date[1]);
+  }
   constructor(
     private route: ActivatedRoute,
     private roomsService: RoomForRentService,

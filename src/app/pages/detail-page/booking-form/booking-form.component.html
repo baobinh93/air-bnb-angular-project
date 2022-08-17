@@ -4,7 +4,11 @@
   class="booking__form border-bottom"
 >
   <mat-form-field class="form__input--date-modal" style="height: 0px">
-    <mat-date-range-input [rangePicker]="picker" class="d-none">
+    <mat-date-range-input
+      [min]="todayDate"
+      [rangePicker]="picker"
+      class="d-none"
+    >
       <input matStartDate formControlName="dateStart" #dateRangeStart />
       <input
         matEndDate
