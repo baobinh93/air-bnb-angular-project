@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../antd/antd.component.scss"
+    ],
+    "names": [],
+    "file": "antd.component.css"
+}

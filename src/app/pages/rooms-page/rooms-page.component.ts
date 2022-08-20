@@ -48,9 +48,67 @@ export class RoomsPageComponent implements OnInit {
       str = str.toLowerCase();
       return str;
     }
-    return null;
+    return 'no';
   }
-  getRoomsList() {}
+  async getRoomsList() {
+    this.paramsLocationToFindRooms = this.convertParamLocation(
+      this.route.snapshot.paramMap.get('locationCodeName')
+    );
+    const allLocation = await this.locationService
+      .getAllLocations()
+      // .toPromise();
+      .subscribe(
+        (result) => {
+          this.dataAllLocation = result;
+          //  console.log('dataAllLocation:', this.dataAllLocation);
+
+          this.dataAllLocation.forEach((location, index) => {
+            if (
+              this.transformVn(location['province']) ==
+              this.paramsLocationToFindRooms
+            ) {
+              this.allIdLocationNeedToFindRoom.push(location['_id']);
+              // console.log(this.allIdLocationNeedToFindRoom);
+            }
+          });
+          setTimeout(() => (this.isLoading = false), 1000);
+        },
+        (err) => {
+          console.warn(err.error.message);
+          this.isLoading = false;
+          console.log('loading', this.isLoading);
+        }
+      );
+    // allLocation.forEach((location: any) => {
+    //   if (
+    //     this.transformVn(location['province']) == this.paramsLocationToFindRooms
+    //   ) {
+    //     this.allIdLocationNeedToFindRoom.push(location['_id']);
+    //     //console.log(this.allIdLocationNeedToFindRoom);
+    //   }
+    // });
+    // console.log(this.allIdLocationNeedToFindRoom);
+    const allRooms = await this.roomsService.getListRoomForRent().subscribe(
+      (res) => {
+        const allRooms = res;
+        console.log('allRooms:', res);
+        allRooms.forEach((room: any) => {
+          if (
+            room['locationId'] &&
+            room['locationId']['province'] &&
+            this.transformVn(room['locationId']['province']) ===
+              this.paramsLocationToFindRooms
+          ) {
+            console.log(this.transformVn(room['locationId']['province']));
+            this.dataAllRooms.push(room);
+          }
+        });
+      },
+      (err) => {
+        console.warn(err.error.message);
+      }
+    );
+  }
   ngOnInit() {
     this.paramsLocationToFindRooms = this.convertParamLocation(
       this.route.snapshot.paramMap.get('locationCodeName')
@@ -58,34 +116,39 @@ export class RoomsPageComponent implements OnInit {
 
     console.log('get code name on url :', this.paramsLocationToFindRooms);
 
-    this.locationService.getAllLocations().subscribe(
-      (result) => {
-        this.dataAllLocation = result;
+    // this.locationService.getAllLocations().subscribe(
+    //   (result) => {
+    //     this.dataAllLocation = result;
+    //     console.log('dataAllLocation:', this.dataAllLocation);
 
-        this.dataAllLocation.forEach((location, index) => {
-          if (
-            this.transformVn(location['province']) ==
-            this.paramsLocationToFindRooms
-          ) {
-            // this.allIdLocationNeedToFindRoom.push(location['_id']);
-            this.roomsService.getListRoomForRent().subscribe(
-              (result) => {
-                this.dataAllRooms = [...this.dataAllRooms, ...result];
-                console.log(location, result);
-              },
-              (err) => {
-                console.warn(err.error.message);
-              }
-            );
-          }
-        });
-        setTimeout(() => (this.isLoading = false), 1000);
-      },
-      (err) => {
-        console.warn(err.error.message);
-        this.isLoading = false;
-        console.log('loading', this.isLoading);
-      }
-    );
+    //     this.dataAllLocation.forEach((location, index) => {
+    //       if (
+    //         this.transformVn(location['province']) ==
+    //         this.paramsLocationToFindRooms
+    //       ) {
+    //         this.allIdLocationNeedToFindRoom.push(location['_id']);
+    //         console.log(this.allIdLocationNeedToFindRoom);
+    //       }
+    //     });
+    //     setTimeout(() => (this.isLoading = false), 1000);
+    //   },
+    //   (err) => {
+    //     console.warn(err.error.message);
+    //     this.isLoading = false;
+    //     console.log('loading', this.isLoading);
+    //   }
+    // );
+
+    // this.roomsService.getListRoomForRent().subscribe(
+    //   (result) => {
+    //     this.dataAllRooms = result;
+    //     console.log(this.dataAllRooms);
+    //   },
+    //   (err) => {
+    //     console.warn(err.error.message);
+    //   }
+    // );
+
+    this.getRoomsList();
   }
 }
