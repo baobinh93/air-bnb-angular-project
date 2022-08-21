@@ -1,53 +1,34 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { TicketService } from 'src/app/service/ticket/ticket.service';
 
 @Component({
   selector: 'app-ticket-card',
-  // templateUrl: './ticket-card.component.html',
+  templateUrl: './ticket-card.component.html',
   styleUrls: ['./ticket-card.component.css'],
-  template: `
-    <div
-      class="ticket-card py-2 border-bottom"
-      *ngIf="this.dataInfoticket.roomId"
-    >
-      <div class="row p-3">
-        <div class="col-12 col-md-6 col-lg-4 ticket-card__img ">
-          <img
-            class="w-100 rounded"
-            src="{{ this.dataInfoticket.roomId['image'] }}"
-            alt="{{ this.dataInfoticket.roomId.name }}"
-          />
-          <div class="ticket-card__date text-center mt-1">
-            <span>
-              {{ this.dataInfoticket.checkIn | date: 'shortDate' }}
-            </span>
-            -
-            <span>
-              {{ this.dataInfoticket.checkOut | date: 'shortDate' }}
-            </span>
-          </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-8">
-          <h3 class="h5">
-            {{ this.dataInfoticket.roomId.name }}
-          </h3>
-          <div>
-            {{
-              this.dataInfoticket.roomId.description.length > 30
-                ? (this.dataInfoticket.roomId.description | slice: 0:30) + '...'
-                : this.dataInfoticket.roomId.description
-            }}
-          </div>
-        </div>
-      </div>
-    </div>
-  `,
+  template: ``,
 })
 export class TicketCardComponent implements OnInit {
   @Input() ticketId!: string;
+  @Input() token!: string;
   dataInfoticket: any = {};
+  cancel(): void {}
 
-  constructor(private ticketService: TicketService) {}
+  confirm(): void {
+    this.ticketService.deleteTickets(this.ticketId, this.token).subscribe(
+      (res) => {
+        this.nzMessageService.success('Đã huỷ vé');
+        this.dataInfoticket = {};
+      },
+      (err) => {
+        this.nzMessageService.error('Huỷ vé không thành công');
+      }
+    );
+  }
+  constructor(
+    private ticketService: TicketService,
+    private nzMessageService: NzMessageService
+  ) {}
 
   ngOnInit() {
     this.ticketService.getInfoTicket(this.ticketId).subscribe(

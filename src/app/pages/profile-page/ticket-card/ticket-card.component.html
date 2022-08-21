@@ -1,3 +1,44 @@
-<p>
-  ticket-card works!
-</p>
+<div class="ticket-card py-2 border-bottom" *ngIf="this.dataInfoticket.roomId">
+  <div class="row p-3">
+    <div class="col-12 col-md-6 col-lg-4 ticket-card__img">
+      <img
+        class="w-100 rounded"
+        src="{{ this.dataInfoticket.roomId['image'] }}"
+        alt="{{ this.dataInfoticket.roomId.name }}"
+      />
+      <div class="ticket-card__date text-center mt-1">
+        <span>
+          {{ this.dataInfoticket.checkIn | date: "shortDate" }}
+        </span>
+        -
+        <span>
+          {{ this.dataInfoticket.checkOut | date: "shortDate" }}
+        </span>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-8 position-relative">
+      <h3 class="h5">
+        {{ this.dataInfoticket.roomId.name }}
+      </h3>
+      <div>
+        {{
+          this.dataInfoticket.roomId.description.length > 30
+            ? (this.dataInfoticket.roomId.description | slice: 0:30) + "..."
+            : this.dataInfoticket.roomId.description
+        }}
+      </div>
+      <div class="position-absolute" style="bottom: 0px; right: 0px">
+        <a
+          nz-popconfirm
+          nzPopconfirmTitle="Bạn có chắc muốn huỷ?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="confirm()"
+          (nzOnCancel)="cancel()"
+          class="text-danger"
+        >
+          Hủy
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -80,7 +80,10 @@ import { TicketService } from 'src/app/service/ticket/ticket.service';
               class="user__ticket"
               *ngFor="let ticket of this.userInfo.tickets"
             >
-              <app-ticket-card [ticketId]="ticket"></app-ticket-card>
+              <app-ticket-card
+                [ticketId]="ticket"
+                [token]="this.userInfo.token"
+              ></app-ticket-card>
             </div>
           </div>
         </div>

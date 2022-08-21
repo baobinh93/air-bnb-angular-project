@@ -15,6 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { DateRange } from '@angular/material/datepicker';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { localStorageService } from 'src/app/localStorage.service';
 import { ReviewService } from 'src/app/service/review/review.service';
 import { RoomForRentService } from 'src/app/service/room-for-rent/roomForRent.service';
@@ -28,7 +29,9 @@ export class BookingFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private roomsService: RoomForRentService,
-    private localStorageService: localStorageService //private localStorageService: localStorageService
+    private localStorageService: localStorageService, //private localStorageService: localStorageService
+
+    private nzMessageService: NzMessageService
   ) {}
   @Input() dateStart: any;
   @Input() dateEnd: any;
@@ -83,8 +86,7 @@ export class BookingFormComponent implements OnInit {
           )
           .subscribe(
             (res) => {
-              alert(res.message);
-
+              this.nzMessageService.success('Đặt phòng thành công');
               this.validateForm.reset();
               console.log(res);
               this.localStorageService.setUserInfo({
@@ -104,7 +106,8 @@ export class BookingFormComponent implements OnInit {
           control.updateValueAndValidity({ onlySelf: true });
         }
       });
-      alert('Vui lòng chọn ngày');
+      // alert('Vui lòng chọn ngày');
+      this.nzMessageService.warning('Vui lòng chọn ngày');
     }
   }
 

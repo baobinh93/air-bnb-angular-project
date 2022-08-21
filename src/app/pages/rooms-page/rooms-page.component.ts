@@ -54,40 +54,32 @@ export class RoomsPageComponent implements OnInit {
     this.paramsLocationToFindRooms = this.convertParamLocation(
       this.route.snapshot.paramMap.get('locationCodeName')
     );
-    const allLocation = await this.locationService
-      .getAllLocations()
-      // .toPromise();
-      .subscribe(
-        (result) => {
-          this.dataAllLocation = result;
-          //  console.log('dataAllLocation:', this.dataAllLocation);
+    // const allLocation = await this.locationService
+    //   .getAllLocations()
+    //   // .toPromise();
+    //   .subscribe(
+    //     (result) => {
+    //       this.dataAllLocation = result;
+    //       //  console.log('dataAllLocation:', this.dataAllLocation);
 
-          this.dataAllLocation.forEach((location, index) => {
-            if (
-              this.transformVn(location['province']) ==
-              this.paramsLocationToFindRooms
-            ) {
-              this.allIdLocationNeedToFindRoom.push(location['_id']);
-              // console.log(this.allIdLocationNeedToFindRoom);
-            }
-          });
-          setTimeout(() => (this.isLoading = false), 1000);
-        },
-        (err) => {
-          console.warn(err.error.message);
-          this.isLoading = false;
-          console.log('loading', this.isLoading);
-        }
-      );
-    // allLocation.forEach((location: any) => {
-    //   if (
-    //     this.transformVn(location['province']) == this.paramsLocationToFindRooms
-    //   ) {
-    //     this.allIdLocationNeedToFindRoom.push(location['_id']);
-    //     //console.log(this.allIdLocationNeedToFindRoom);
-    //   }
-    // });
-    // console.log(this.allIdLocationNeedToFindRoom);
+    //       this.dataAllLocation.forEach((location, index) => {
+    //         if (
+    //           this.transformVn(location['province']) ==
+    //           this.paramsLocationToFindRooms
+    //         ) {
+    //           this.allIdLocationNeedToFindRoom.push(location['_id']);
+    //           // console.log(this.allIdLocationNeedToFindRoom);
+    //         }
+    //       });
+
+    //     },
+    //     (err) => {
+    //       console.warn(err.error.message);
+    //       this.isLoading = false;
+    //       console.log('loading', this.isLoading);
+    //     }
+    //   );
+
     const allRooms = await this.roomsService.getListRoomForRent().subscribe(
       (res) => {
         const allRooms = res;
@@ -99,13 +91,15 @@ export class RoomsPageComponent implements OnInit {
             this.transformVn(room['locationId']['province']) ===
               this.paramsLocationToFindRooms
           ) {
-            console.log(this.transformVn(room['locationId']['province']));
+            //console.log(this.transformVn(room['locationId']['province']));
             this.dataAllRooms.push(room);
           }
         });
+        this.isLoading = false;
       },
       (err) => {
         console.warn(err.error.message);
+        this.isLoading = false;
       }
     );
   }

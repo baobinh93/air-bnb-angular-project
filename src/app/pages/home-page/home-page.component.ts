@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { localStorageService } from 'src/app/localStorage.service';
+import { LocationService } from 'src/app/service/location/location.service';
 import { ProvincesService } from 'src/app/service/provinces/provinces.service';
 import { RoomForRentService } from 'src/app/service/room-for-rent/roomForRent.service';
 import Typed from 'typed.js';
@@ -9,195 +10,7 @@ import Typed from 'typed.js';
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css'],
-  // template: `
-  //   <div
-  //     class="search"
-  //     [ngStyle]="{ 'background-image': 'url(assets/imgs/searchBg.jpg)' }"
-  //   >
-  //     <div class="container text-center">
-  //       <h1 class="search__header font-weight-bold">
-  //         Find Nearby <span class="typed-element"></span>
-  //       </h1>
-  //       <p class="search__des">
-  //         Explore top-rated attractions, activities and more!
-  //       </p>
-  //       <span class="typed-element"> </span>
-  //       <form action="">
-  //         <div
-  //           class="search-box bg-white row align-items-center
-  //         "
-  //         >
-  //           <input
-  //             type="text"
-  //             placeholder="What are you looking for ?"
-  //             class="col-5 p-3 rounded-right-pill border-right search-box__input-1"
-  //           />
-  //           <!-- <input
-  //             type="text"
-  //             placeholder="All Location "
-  //             class="col-5  search-box__input-2 border-right"
-  //           /> -->
-  //           <div class="dropdown show col-5  search-box__input-2 border-right">
-  //             <a
-  //               class="btn w-100 dropdown-toggle"
-  //               href="#"
-  //               role="button"
-  //               id="dropdownMenuLink"
-  //               data-toggle="dropdown"
-  //               aria-haspopup="true"
-  //               aria-expanded="false"
-  //             >
-  //               All location
-  //             </a>
-
-  //             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-  //               <ng-container *ngFor="let province of this.allProvincesOfVn">
-  //                 <a
-  //                   class="dropdown-item"
-  //                   href="/rooms/{{ province['codename'] }}"
-  //                 >
-  //                   {{ province['name'] }}
-  //                 </a>
-  //               </ng-container>
-  //             </div>
-  //           </div>
-  //           <button class="col-2 btn   search-box__button">Search</button>
-  //         </div>
-  //       </form>
-  //     </div>
-  //   </div>
-  //   <div class="discovery">
-  //     <div class="container">
-  //       <div class="discovery__header text-center">
-  //         Khám phá những điểm đến gần đây
-  //       </div>
-  //       <div class="discovery__content--box row">
-  //         <div class="col-4 col-md-3 hvr-float pointer-cursor ">
-  //           <div
-  //             class="discovery__content-box--item  rounded"
-  //             [ngStyle]="{ 'background-image': 'url(assets/imgs/tphcm.jpg)' }"
-  //           >
-  //             <div class="discovery__content-box--name">Ho Chi Minh</div>
-  //             <div class="discovery__content-box--info">4 rental</div>
-  //           </div>
-  //         </div>
-  //         <div class="col-4 col-md-3 hvr-float pointer-cursor ">
-  //           <div
-  //             class="discovery__content-box--item  rounded"
-  //             [ngStyle]="{ 'background-image': 'url(assets/imgs/tphcm.jpg)' }"
-  //           >
-  //             <div class="discovery__content-box--name">Ho Chi Minh</div>
-  //             <div class="discovery__content-box--info">4 rental</div>
-  //           </div>
-  //         </div>
-  //         <div class="col-4 col-md-3 hvr-float pointer-cursor">
-  //           <div
-  //             class="discovery__content-box--item  rounded"
-  //             [ngStyle]="{ 'background-image': 'url(assets/imgs/tphcm.jpg)' }"
-  //           >
-  //             <div class="discovery__content-box--name">Ho Chi Minh</div>
-  //             <div class="discovery__content-box--info">4 rental</div>
-  //           </div>
-  //         </div>
-  //         <div class="col-4 col-md-3 hvr-float pointer-cursor">
-  //           <div
-  //             class="discovery__content-box--item  rounded"
-  //             [ngStyle]="{ 'background-image': 'url(assets/imgs/tphcm.jpg)' }"
-  //           >
-  //             <div class="discovery__content-box--name">Ho Chi Minh</div>
-  //             <div class="discovery__content-box--info">4 rental</div>
-  //           </div>
-  //         </div>
-  //         <div class="col-4 col-md-3 hvr-float pointer-cursor">
-  //           <div
-  //             class="discovery__content-box--item  rounded"
-  //             [ngStyle]="{ 'background-image': 'url(assets/imgs/tphcm.jpg)' }"
-  //           >
-  //             <div class="discovery__content-box--name">Ho Chi Minh</div>
-  //             <div class="discovery__content-box--info">4 rental</div>
-  //           </div>
-  //         </div>
-  //         <div class="col-4 col-md-3 hvr-float pointer-cursor">
-  //           <div
-  //             class="discovery__content-box--item  rounded"
-  //             [ngStyle]="{ 'background-image': 'url(assets/imgs/tphcm.jpg)' }"
-  //           >
-  //             <div class="discovery__content-box--name">Ho Chi Minh</div>
-  //             <div class="discovery__content-box--info">4 rental</div>
-  //           </div>
-  //         </div>
-  //         <div class="col-4 col-md-3 hvr-float pointer-cursor ">
-  //           <div
-  //             class="discovery__content-box--item  rounded"
-  //             [ngStyle]="{ 'background-image': 'url(assets/imgs/tphcm.jpg)' }"
-  //           >
-  //             <div class="discovery__content-box--name">Ho Chi Minh</div>
-  //             <div class="discovery__content-box--info">4 rental</div>
-  //           </div>
-  //         </div>
-  //         <div class="col-4 col-md-3 hvr-float pointer-cursor  ">
-  //           <div
-  //             class="discovery__content-box--item  rounded "
-  //             [ngStyle]="{ 'background-image': 'url(assets/imgs/tphcm.jpg)' }"
-  //           >
-  //             <div class="discovery__content-box--name">Ho Chi Minh</div>
-  //             <div class="discovery__content-box--info">4 rental</div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  //   <div class="discovery">
-  //     <div class="container">
-  //       <div class="discovery__header text-center">
-  //         Khám phá danh sách của chúng tôi
-  //       </div>
-  //       <div class="discovery__content--box row">
-  //         <div class="col-6 col-md-4">
-  //           <div class="card hvr-grow">
-  //             <img [src]="phongNguImg" class="card-img-top rounded" alt="..." />
-  //             <div class="card-body text-center">
-  //               <h5 class="card-title">Card title</h5>
-  //               <p class="card-text">
-  //                 Some quick example text to build on the card title and make up
-  //                 the bulk of the card's content.
-  //               </p>
-  //             </div>
-  //           </div>
-  //         </div>
-  //         <div class="col-6 col-md-4">
-  //           <div class="card hvr-grow">
-  //             <img [src]="phongNguImg" class="card-img-top rounded" alt="..." />
-  //             <div class="card-body text-center">
-  //               <h5 class="card-title">Card title</h5>
-  //               <p class="card-text">
-  //                 Some quick example text to build on the card title and make up
-  //                 the bulk of the card's content.
-  //               </p>
-  //             </div>
-  //           </div>
-  //         </div>
-  //         <div class="col-6 col-md-4">
-  //           <div class="card hvr-grow">
-  //             <img [src]="phongNguImg" class="card-img-top rounded" alt="..." />
-  //             <div class="card-body text-center">
-  //               <h5 class="card-title">Card title</h5>
-  //               <p class="card-text">
-  //                 Some quick example text to build on the card title and make up
-  //                 the bulk of the card's content.
-  //               </p>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // `,
 })
-// type province = {
-//   codename:string;
-//   name:string;
-// }
 export class HomePageComponent implements OnInit {
   //localStorageService;
   //userInfo: object = {};
@@ -208,11 +21,21 @@ export class HomePageComponent implements OnInit {
   dataRoom01: any = {};
   dataRoom02: any = {};
   dataRoom03: any = {};
+
+  rentalsOfHanoi: number = 0;
+  rentalsOfHoChiMinh: number = 0;
+  rentalsOfDaNang: number = 0;
+  rentalsOfVungTau: number = 0;
+  rentalsOfCanTho: number = 0;
+  rentalsOfPhuQuoc: number = 0;
+  rentalsOfNhaTrang: number = 0;
+  rentalsOfHoiAn: number = 0;
   @ViewChild('searchForm') searchForm!: NgForm;
 
   constructor(
     private provinces: ProvincesService,
     private roomsServices: RoomForRentService,
+    private locationService: LocationService,
     private router: Router
   ) {
     // this.localStorageService = new localStorageService();
@@ -232,7 +55,7 @@ export class HomePageComponent implements OnInit {
 
     this.provinces.getAllVNProvinces().subscribe(
       (result) => {
-        console.log('result', result);
+        //console.log('result', result);
 
         this.allProvincesOfVn = result;
       },
@@ -245,28 +68,30 @@ export class HomePageComponent implements OnInit {
     this.roomsServices.getInfoRoomForRent('620604c6fee2fc001cd7b8f0').subscribe(
       (res) => {
         this.dataRoom01 = { ...res };
-        console.log(this.dataRoom01);
+        //console.log(this.dataRoom01);
       },
       (err) => console.log(err)
     );
     this.roomsServices.getInfoRoomForRent('61698c5fefe193001c0a5baa').subscribe(
       (res) => {
         this.dataRoom02 = { ...res };
-        console.log(this.dataRoom02);
+        //console.log(this.dataRoom02);
       },
       (err) => console.log(err)
     );
     this.roomsServices.getInfoRoomForRent('6172397eefe193001c0a7a4a').subscribe(
       (res) => {
         this.dataRoom03 = { ...res };
-        console.log(this.dataRoom03);
+        // console.log(this.dataRoom03);
       },
       (err) => console.log(err)
     );
+
+    this.findRentalsOfLocation();
   }
 
   handleSearchSubmit() {
-    console.log('sm ne', this.searchForm.value);
+    //  console.log('sm ne', this.searchForm.value);
     const { location } = this.searchForm.value;
 
     this.router.navigate(['rooms', this.transformVn(location)]);
@@ -289,5 +114,69 @@ export class HomePageComponent implements OnInit {
       return str;
     }
     return null;
+  }
+
+  async findRentalsOfLocation() {
+    const allRooms = await this.roomsServices.getListRoomForRent().toPromise();
+
+    console.log('allRooms', allRooms);
+
+    allRooms.forEach((room: any) => {
+      if (room['locationId'] && room['locationId']['province']) {
+        this.transformVn(room['locationId']['province']) === 'ha_noi' &&
+          this.rentalsOfHanoi++;
+        this.transformVn(room['locationId']['province']) === 'ho_chi_minh' &&
+          this.rentalsOfHoChiMinh++;
+        this.transformVn(room['locationId']['province']) === 'da_nang' &&
+          this.rentalsOfDaNang++;
+        this.transformVn(room['locationId']['province']) === 'vung_tau' &&
+          this.rentalsOfVungTau++;
+        this.transformVn(room['locationId']['province']) === 'can_tho' &&
+          this.rentalsOfCanTho++;
+        this.transformVn(room['locationId']['province']) === 'phu_quoc' &&
+          this.rentalsOfPhuQuoc++;
+        this.transformVn(room['locationId']['province']) === 'nha_trang' &&
+          this.rentalsOfNhaTrang++;
+        this.transformVn(room['locationId']['province']) === 'hoi_an' &&
+          this.rentalsOfHoiAn++;
+      }
+    });
+    console.log('hanoi: ', this.rentalsOfHanoi);
+    // const allIdLocationNeedToFindRoom = [];
+    // const dataAllRooms = [];
+    // const allLocation = await this.locationService.getAllLocations().subscribe(
+    //   (result) => {
+    //     result.forEach((location: any) => {
+    //       if (this.transformVn(location['province']) == 'ha_noi'){
+    //         allIdLocationNeedToFindRoom.push(location['_id']);
+    //       }
+    //     });
+    //   },
+    //   (err) => {
+    //     console.warn(err.error.message);
+    //   }
+    // );
+
+    // const allRooms = await this.roomsServices.getListRoomForRent().subscribe(
+    //   (res) => {
+    //     console.log('allRooms:', res);
+    //     res.forEach((room: any) => {
+    //       if (
+    //         room['locationId'] &&
+    //         room['locationId']['province'] &&
+    //         this.transformVn(room['locationId']['province']) === 'ha_noi'
+    //       ) {
+    //         //console.log(this.transformVn(room['locationId']['province']));
+    //         dataAllRooms.push(room);
+    //       }
+    //     });
+    //     console.log('dataAllRooms', dataAllRooms.length);
+    //     return dataAllRooms.length;
+    //   },
+    //   (err) => {
+    //     console.warn(err.error.message);
+    //     return 0;
+    //   }
+    // );
   }
 }
