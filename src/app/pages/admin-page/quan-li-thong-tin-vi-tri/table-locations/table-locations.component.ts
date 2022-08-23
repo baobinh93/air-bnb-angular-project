@@ -253,6 +253,9 @@ export class TableLocationsComponent implements OnInit {
       console.log('submit', this.validateUpdateForm.value);
       const { name, province, country, valueate } =
         this.validateUpdateForm.value;
+      console.log(this.validateUpdateForm.value);
+      console.log(this.idLocation);
+
       this.locationService
         .updateInfoLocation(
           this.idLocation,
@@ -265,7 +268,18 @@ export class TableLocationsComponent implements OnInit {
         .subscribe(
           (res) => {
             this.message.info('Cập nhật  thành công');
-            setTimeout(this.refresh, 500);
+            this.isVisibleUpdateModal = false;
+            // setTimeout(this.refresh, 500);
+            console.log(res);
+            this.dataOfAllLocation = this.dataOfAllLocation.map(
+              (location: any) => {
+                if (location['_id'] === res['_id']) {
+                  return (location = res);
+                } else {
+                  return location;
+                }
+              }
+            );
           },
           (err) => {
             console.log(err);
@@ -282,8 +296,10 @@ export class TableLocationsComponent implements OnInit {
       });
     }
   }
+  // --- end handle Update Form ---
+
+  // --- start handle Create Form ---
   submitCreateForm(): void {
-    
     if (this.validateUpdateForm.valid) {
       console.log('submit', this.validateUpdateForm.value);
       const { name, province, country, valueate } =
@@ -316,19 +332,23 @@ export class TableLocationsComponent implements OnInit {
       });
     }
   }
-  // --- end handle Update Form ---
+  // --- end handle Create Form ---
 
   // --- start handle Delete location ---
 
   confirmDeleteLocation(_idLocation: string): void {
-    this.message.info('click ok');
+    //this.message.info('click ok');
     console.log(_idLocation);
     this.locationService
       .deleteLocation(_idLocation, this.Variable.tokenAdmin)
       .subscribe(
         (res) => {
           this.message.info('Xoá  thành công');
-          setTimeout(this.refresh, 500);
+          this.dataOfAllLocation = this.dataOfAllLocation.filter(
+            (location: any) => {
+              return location['_id'] !== _idLocation;
+            }
+          );
         },
         (err) => {
           console.log(err);

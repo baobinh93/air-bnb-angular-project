@@ -65,7 +65,7 @@ import { Variable } from 'src/app/service/variable';
             </td>
             <td>
               <button
-                class="btn btn-info btn-sm my-1"
+                class="btn btn-info btn-sm my-1 mr-1"
                 (click)="showModalUpdateForm(data)"
               >
                 Sửa
@@ -115,7 +115,6 @@ import { Variable } from 'src/app/service/variable';
             <nz-form-control [nzSm]="14" [nzXs]="24">
               <nz-select
                 formControlName="locationId"
-                (nzScrollToBottom)="loadMore()"
                 nzPlaceHolder="Select location"
                 nzAllowClear
                 nzShowSearch
@@ -352,17 +351,6 @@ export class QuanLiThongTinPhongComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.roomService.getListRoomForRent().subscribe(
-      (res) => {
-        this.dataOfAllRoom = res.filter((room: any) => room['locationId']);
-
-        console.log(this.dataOfAllRoom);
-      },
-      (err) => {
-        alert(err.message);
-      }
-    );
-
     this.validateForm = this.fb.group({
       name: [null, [Validators.required]],
       guests: [null, [Validators.required]],
@@ -382,8 +370,24 @@ export class QuanLiThongTinPhongComponent implements OnInit {
       cableTV: [false],
       locationId: [null, [Validators.required]],
     });
+    this.roomService.getListRoomForRent().subscribe(
+      (res) => {
+        this.dataOfAllRoom = res.filter((room: any) => room['locationId']);
 
-    this.loadMore();
+        console.log(this.dataOfAllRoom);
+      },
+      (err) => {
+        alert(err.message);
+      }
+    );
+    this.locationService.getAllLocations().subscribe(
+      (res) => {
+        this.isLoading = false;
+        this.dataAllLocation = res;
+        console.log(this.dataAllLocation);
+      },
+      (err) => alert(err.error.message)
+    );
   }
 
   // --- start Image upload ---
@@ -437,7 +441,7 @@ export class QuanLiThongTinPhongComponent implements OnInit {
     console.log(_room['locationId']);
 
     this.idLocationId = this.findIdLocationFormLocation(_room['locationId']);
-    console.log(this.idLocationId);
+    //console.log(this.idLocationId);
 
     this.modalTitle = 'Sửa thông tin phòng cho thuê';
     this.validateForm.get('name')?.setValue(_room.name);
@@ -463,10 +467,19 @@ export class QuanLiThongTinPhongComponent implements OnInit {
     console.log(_idRoom);
     this.roomService
       .deleteRoomForRent(_idRoom, this.Variable.tokenAdmin)
-      .subscribe((res) => {
-        this.message.info('Xoá  thành công');
-        setTimeout(this.refresh, 500);
-      });
+      .subscribe(
+        (res) => {
+          this.message.success('Xoá  thành công');
+          this.dataOfAllRoom = this.dataOfAllRoom.filter(
+            (room: any) => room['_id'] !== _idRoom
+          );
+        },
+        (err) => {
+          this.message.warning('Xoá thất bại');
+        }
+      );
+
+    //console.log(this.dataOfAllRoom);
   }
 
   submitUpdateForm(): void {
@@ -514,9 +527,25 @@ export class QuanLiThongTinPhongComponent implements OnInit {
           this.Variable.tokenAdmin
         )
         .subscribe(
-          (res) => {
+          (resUserservice) => {
             this.message.info('Cập nhật  thành công');
-            setTimeout(this.refresh, 500);
+            this.isModalUpdateForm = false;
+            this.isModalFormShow = false;
+
+            console.log(resUserservice);
+            this.locationService
+              .getInfoLocation(resUserservice['locationId'])
+              .subscribe((resLocationService) => {
+                resUserservice['locationId'] = resLocationService;
+                console.log(resUserservice);
+                this.dataOfAllRoom = this.dataOfAllRoom.map((room: any) => {
+                  if (room['_id'] === resUserservice['_id']) {
+                    return (room = { ...resUserservice });
+                  } else {
+                    return room;
+                  }
+                });
+              });
           },
           (err) => this.message.warning(err.error.message)
         );
@@ -584,31 +613,40 @@ export class QuanLiThongTinPhongComponent implements OnInit {
     this.isModalFormShow = false;
   }
 
-  loadMore(): void {
-    this.isLoading = true;
+  // loadMore(): void {
+  //   this.isLoading = true;
+  //   this.roomService.getListRoomForRent().subscribe(
+  //     (res) => {
+  //       this.dataOfAllRoom = res.filter((room: any) => room['locationId']);
 
-    this.locationService.getAllLocations().subscribe(
-      (res) => {
-        this.isLoading = false;
-        this.dataAllLocation = res;
-        console.log(this.dataAllLocation);
-      },
-      (err) => alert(err.error.message)
-    );
-  }
+  //       console.log(this.dataOfAllRoom);
+  //     },
+  //     (err) => {
+  //       alert(err.message);
+  //     }
+  //   );
+  //   // this.locationService.getAllLocations().subscribe(
+  //   //   (res) => {
+  //   //     this.isLoading = false;
+  //   //     this.dataAllLocation = res;
+  //   //     console.log(this.dataAllLocation);
+  //   //   },
+  //   //   (err) => alert(err.error.message)
+  //   // );
+  // }
 
   findIdLocationFormLocation(_locationIdInRoom: any) {
-    let rs = '';
+    let result = '';
     this.dataAllLocation.forEach((location) => {
       if (
         location['name'] === _locationIdInRoom['name'] &&
         location['province'] === _locationIdInRoom['province']
       ) {
-        console.log(location['_id']);
-        rs = location['_id'];
+        //console.log(location['_id']);
+        result = location['_id'];
       }
     });
-    return rs;
+    return result;
   }
 
   // onSearch(value: string): void {

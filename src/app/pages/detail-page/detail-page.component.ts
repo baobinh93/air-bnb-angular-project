@@ -51,12 +51,12 @@ export class DetailPageComponent implements OnInit {
   ngOnInit() {
     this.idRoom = this.route.snapshot.paramMap.get('idRoom');
 
-    console.log(this.idRoom);
+    console.log('Id Room: ', this.idRoom);
 
     this.idRoom &&
       this.roomsService.getInfoRoomForRent(this.idRoom).subscribe(
         (result) => {
-          console.log(result);
+          console.log('Data room: ', result);
           this.dataRoom = result;
         },
         (err) => {}

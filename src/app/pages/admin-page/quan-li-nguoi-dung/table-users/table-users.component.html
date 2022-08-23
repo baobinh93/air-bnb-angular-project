@@ -132,6 +132,7 @@
   <ng-container *nzModalContent>
     <app-update-user-form
       [dataUserToUpdate]="this.dataUserToUpdate"
+      (updateUserInfo)="getDataFormChildren($event)"
     ></app-update-user-form>
   </ng-container>
 </nz-modal>

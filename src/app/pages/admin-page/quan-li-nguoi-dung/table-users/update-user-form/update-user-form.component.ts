@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UserService } from 'src/app/service/user/userService.service';
@@ -148,6 +148,10 @@ import { Variable } from 'src/app/service/variable';
 })
 export class UpdateUserFormComponent implements OnInit {
   @Input() dataUserToUpdate: any = {};
+  @Output() updateUserInfo = new EventEmitter();
+  sendDataToParent(_userInfo: {}) {
+    this.updateUserInfo.emit(_userInfo);
+  }
   openUpdateBtn = true;
   validateForm!: FormGroup;
   Variable: Variable;
@@ -189,39 +193,14 @@ export class UpdateUserFormComponent implements OnInit {
         .subscribe(
           (res) => {
             this.message.info('Cập nhật thành công');
-            setTimeout(this.refresh, 500);
-            //console.log(res);
+            //setTimeout(this.refresh, 500);
+            this.sendDataToParent(res);
+            console.log(res);
           },
           (err) => {
             this.message.warning(err.message);
           }
         );
-      // this.userService
-      //   .updateUserInfo(
-      //     this.userInfo._id,
-      //     name,
-      //     this.userInfo.email,
-      //     phone,
-      //     birthday,
-      //     gender,
-      //     type,
-      //     address,
-      //     this.userInfo.token
-      //   )
-      //   .subscribe(
-      //     (result) => {
-      //       console.log('result', result);
-      //       console.log('token', this.userInfo.token);
-      //       this.localStorageService.setUserInfo({
-      //         token: this.userInfo.token,
-      //         ...result,
-      //       });
-      //       //alert(result.message);
-      //     },
-      //     (err) => {
-      //       alert(err.error.message);
-      //     }
-      //   );
     } else {
       Object.values(this.validateForm.controls).forEach((control) => {
         if (control.invalid) {
@@ -240,7 +219,7 @@ export class UpdateUserFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.Variable);
+    // console.log(this.Variable);
     const dataUser = this.dataUserToUpdate;
     this.validateForm = this.fb.group({
       phone: [

@@ -34,6 +34,7 @@ export class RoomsPageComponent implements OnInit {
   }
   transformVn(str: string) {
     if (str) {
+      str = str.toLowerCase();
       str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
       str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
       str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
@@ -41,11 +42,12 @@ export class RoomsPageComponent implements OnInit {
       str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
       str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
       str = str.replace(/đ/g, 'd');
+
       // Some system encode vietnamese combining accent as individual utf-8 characters
       str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ''); // Huyền sắc hỏi ngã nặng
       str = str.replace(/\u02C6|\u0306|\u031B/g, ''); // Â, Ê, Ă, Ơ, Ư
       str = str.replace(/\s+/g, '_');
-      str = str.toLowerCase();
+
       return str;
     }
     return 'no';
@@ -83,7 +85,9 @@ export class RoomsPageComponent implements OnInit {
     const allRooms = await this.roomsService.getListRoomForRent().subscribe(
       (res) => {
         const allRooms = res;
-        console.log('allRooms:', res);
+        // console.log('allRooms:', res);
+        // console.log(res[568]);
+        //  console.log(this.transformVn('ế Ến'));
         allRooms.forEach((room: any) => {
           if (
             room['locationId'] &&
@@ -91,7 +95,7 @@ export class RoomsPageComponent implements OnInit {
             this.transformVn(room['locationId']['province']) ===
               this.paramsLocationToFindRooms
           ) {
-            //console.log(this.transformVn(room['locationId']['province']));
+            // console.log(this.transformVn(room['locationId']['province']));
             this.dataAllRooms.push(room);
           }
         });

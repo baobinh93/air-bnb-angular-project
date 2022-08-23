@@ -99,6 +99,7 @@ export class HomePageComponent implements OnInit {
 
   transformVn(str: string) {
     if (str) {
+      str = str.toLowerCase();
       str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
       str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
       str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
@@ -110,7 +111,7 @@ export class HomePageComponent implements OnInit {
       str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ''); // Huyền sắc hỏi ngã nặng
       str = str.replace(/\u02C6|\u0306|\u031B/g, ''); // Â, Ê, Ă, Ơ, Ư
       str = str.replace(/\s+/g, '_');
-      str = str.toLowerCase();
+
       return str;
     }
     return null;
@@ -141,7 +142,7 @@ export class HomePageComponent implements OnInit {
           this.rentalsOfHoiAn++;
       }
     });
-    console.log('hanoi: ', this.rentalsOfHanoi);
+    // console.log('hanoi: ', this.transformVn('Phú Quốc'));
     // const allIdLocationNeedToFindRoom = [];
     // const dataAllRooms = [];
     // const allLocation = await this.locationService.getAllLocations().subscribe(
